@@ -1,5 +1,30 @@
 import { Camera, Video, Image, Users } from 'lucide-react';
 import { Card } from '@/components/ui/card';
+import { motion } from 'framer-motion';
+import { AnimateOnScroll } from './AnimateOnScroll';
+
+const container = {
+  hidden: { opacity: 0 },
+  visible: {
+    opacity: 1,
+    transition: {
+      staggerChildren: 0.1,
+      delayChildren: 0.2
+    }
+  }
+};
+
+const item = {
+  hidden: { y: 20, opacity: 0 },
+  visible: {
+    y: 0,
+    opacity: 1,
+    transition: {
+      duration: 0.5,
+      ease: [0.16, 1, 0.3, 1]
+    }
+  }
+};
 
 export default function ServicesSection() {
   const services = [
@@ -26,34 +51,53 @@ export default function ServicesSection() {
   ];
 
   return (
-    <section id="services" className="py-24 px-4 bg-background">
-      <div className="max-w-7xl mx-auto">
-        <div className="text-center mb-16 animate-fade-in-up">
-          <h2 className="text-4xl md:text-5xl font-serif font-medium mb-4">Our Services</h2>
-          <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
-            We offer a range of photography services tailored to capture your love story perfectly.
-          </p>
-        </div>
+    <AnimateOnScroll>
+      <section id="services" className="py-24 px-4 bg-background">
+        <div className="max-w-7xl mx-auto">
+          <motion.div 
+            className="text-center mb-16"
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true, margin: "-100px" }}
+            transition={{ duration: 0.6 }}
+          >
+            <h2 className="text-4xl md:text-5xl font-serif font-medium mb-4">Our Services</h2>
+            <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
+              We offer a range of photography services tailored to capture your love story perfectly.
+            </p>
+          </motion.div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-          {services.map((service, index) => {
-            const Icon = service.icon;
-            return (
-              <Card
-                key={index}
-                className="p-6 hover-elevate active-elevate-2 transition-all duration-300"
-                style={{ animationDelay: `${index * 100}ms` }}
-              >
-                <div className="w-12 h-12 rounded-full bg-primary/10 flex items-center justify-center mb-4">
-                  <Icon className="w-6 h-6 text-primary" />
-                </div>
-                <h3 className="text-xl font-serif font-medium mb-2">{service.title}</h3>
-                <p className="text-sm text-muted-foreground">{service.description}</p>
-              </Card>
-            );
-          })}
+          <motion.div 
+            className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6"
+            variants={container}
+            initial="hidden"
+            whileInView="visible"
+            viewport={{ once: true, margin: "-100px" }}
+          >
+            {services.map((service, index) => {
+              const Icon = service.icon;
+              return (
+                <motion.div key={index} variants={item}>
+                  <Card 
+                    className="p-6 hover-elevate active-elevate-2 transition-all duration-300 h-full"
+                    whileHover={{ y: -5 }}
+                  >
+                    <motion.div 
+                      className="w-12 h-12 rounded-full bg-primary/10 flex items-center justify-center mb-4"
+                      whileHover={{ scale: 1.1 }}
+                      transition={{ type: 'spring', stiffness: 400, damping: 10 }}
+                    >
+                      <Icon className="w-6 h-6 text-primary" />
+                    </motion.div>
+                    <h3 className="text-xl font-serif font-medium mb-2">{service.title}</h3>
+                    <p className="text-sm text-muted-foreground">{service.description}</p>
+                  </Card>
+                </motion.div>
+              );
+            })}
+          </motion.div>
         </div>
-      </div>
-    </section>
+      </section>
+    </AnimateOnScroll>
   );
 }

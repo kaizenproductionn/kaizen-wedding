@@ -1,3 +1,5 @@
+import { motion, AnimatePresence } from 'framer-motion';
+import { useState, useEffect } from 'react';
 import Navbar from './components/Navbar';
 import HeroSection from './components/HeroSection';
 import About from './components/About';
@@ -6,6 +8,29 @@ import Services from './components/Services';
 import Testimonials from './components/Testimonials';
 import Contact from './components/Contact';
 import Footer from './components/Footer';
+import { AnimateOnScroll } from './components/AnimateOnScroll';
+
+const pageTransition = {
+  in: {
+    opacity: 1,
+    y: 0,
+    transition: { duration: 0.5, ease: 'easeInOut' },
+  },
+  out: {
+    opacity: 0,
+    y: 20,
+    transition: { duration: 0.3, ease: 'easeInOut' },
+  },
+};
+
+const sectionVariants = {
+  hidden: { opacity: 0, y: 50 },
+  visible: {
+    opacity: 1,
+    y: 0,
+    transition: { duration: 0.8, ease: 'easeOut' },
+  },
+};
 
 function App() {
   const testimonials = [
@@ -31,17 +56,39 @@ function App() {
       quote: 'From our engagement session to the wedding day, the experience was flawless. They captured moments we didn\'t even know happened!',
     },
   ];
+
   return (
-    <div id="home" className="min-h-screen bg-white">
-      <Navbar />
-      <HeroSection />
-      <About />
-      <Portfolio />
-      <Services />
-      <Testimonials testimonials={testimonials} />
-      <Contact />
-      <Footer />
-    </div>
+    <AnimatePresence mode="wait">
+      <div id="home" className="min-h-screen bg-white overflow-x-hidden">
+        <Navbar />
+        
+
+          <HeroSection />
+
+
+        <AnimateOnScroll>
+          <About />
+        </AnimateOnScroll>
+
+        <AnimateOnScroll>
+          <Portfolio />
+        </AnimateOnScroll>
+
+        <AnimateOnScroll direction="right">
+          <Services />
+        </AnimateOnScroll>
+
+        <AnimateOnScroll direction="left">
+          <Testimonials testimonials={testimonials} />
+        </AnimateOnScroll>
+
+        <AnimateOnScroll>
+          <Contact />
+        </AnimateOnScroll>
+
+        <Footer />
+      </div>
+    </AnimatePresence>
   );
 }
 
